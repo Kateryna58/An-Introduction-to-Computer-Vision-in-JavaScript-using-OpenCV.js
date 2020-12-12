@@ -1,1 +1,1 @@
-# An-Introduction-to-Computer-Vision-in-JavaScript-using-OpenCV.js
+# Computer-Vision-in-JavaScript-using-OpenCV.js
