@@ -16,46 +16,36 @@ imgElement.onload = function () {
   cv.imshow("imageCanvas", image);
   image.delete();
 };
-//---------------step 3-------------------------
-
-document.getElementById("circlesButton").onclick = function () {
-  this.disabled = true;
-  document.body.classList.add("loading");
-
+/*---------------------------------------------------------------------------------------------*/
+document.getElementById("histogramButton").onclick = function () {
   let srcMat = cv.imread("imageCanvas");
-  let displayMat = srcMat.clone();
-  let circlesMat = new cv.Mat();
-
-  cv.cvtColor(srcMat, srcMat, cv.COLOR_RGBA2GRAY);
-
-  cv.HoughCircles(
-    srcMat,
-    circlesMat,
-    cv.HOUGH_GRADIENT,
-    1,
-    45,
-    75,
-    40,
-    0,
-    0
-  );
-
-  for (let i = 0; i < circlesMat.cols; ++i) {
-    let x = circlesMat.data32F[i * 3];
-    let y = circlesMat.data32F[i * 3 + 1];
-    let radius = circlesMat.data32F[i * 3 + 2];
-    let center = new cv.Point(x, y);
-
-    // draw circles
-    cv.circle(displayMat, center, radius, [0, 0, 0, 255], 3);
+  cv.cvtColor(srcMat, srcMat, cv.COLOR_RGBA2GRAY, 0);
+  let srcVec = new cv.MatVector();
+  srcVec.push_back(srcMat);
+  let accumulate = false;
+  let channels = [0];
+  let histSize = [256];
+  let ranges = [0, 255];
+  let hist = new cv.Mat();
+  let mask = new cv.Mat();
+  let color = new cv.Scalar(255, 255, 255);
+  let scale = 2;
+  // You can try more different parameters
+  cv.calcHist(srcVec, channels, mask, hist, histSize, ranges, accumulate);
+  let result = cv.minMaxLoc(hist, mask);
+  let max = result.maxVal;
+  let dst = new cv.Mat.zeros(srcMat.rows, histSize[0] * scale, cv.CV_8UC3);
+  // draw histogram
+  for (let i = 0; i < histSize[0]; i++) {
+    let binVal = (hist.data32F[i] * srcMat.rows) / max;
+    let point1 = new cv.Point(i * scale, srcMat.rows - 1);
+    let point2 = new cv.Point((i + 1) * scale - 1, srcMat.rows - binVal);
+    cv.rectangle(dst, point1, point2, color, cv.FILLED);
   }
-
-  cv.imshow("imageCanvas", displayMat);
-
+  cv.imshow("imageCanvas", dst);
   srcMat.delete();
-  displayMat.delete();
-  circlesMat.delete();
-
-  this.disabled = false;
-  document.body.classList.remove("loading");
+  dst.delete();
+  srcVec.delete();
+  mask.delete();
+  hist.delete();
 };
