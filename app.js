@@ -12,9 +12,15 @@ inputElement.onchange = function () {
 };
 
 imgElement.onload = function () {
-  let image = cv.imread(imgElement);
-  cv.imshow("imageCanvas", image);
-  image.delete();
+  // let image = cv.imread(imgElement);
+  // cv.imshow("imageCanvas", image);
+  // image.delete();
+  let src = cv.imread('imageSrc');
+  let dst = new cv.Mat();
+  cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
+  cv.equalizeHist(src, dst);
+  cv.imshow('imageCanvas', dst);
+  src.delete(); dst.delete();
 };
 /*---------------------------------------------------------------------------------------------*/
 document.getElementById("histogramButton").onclick = function () {
@@ -42,7 +48,7 @@ document.getElementById("histogramButton").onclick = function () {
     let point2 = new cv.Point((i + 1) * scale - 1, srcMat.rows - binVal);
     cv.rectangle(dst, point1, point2, color, cv.FILLED);
   }
-  cv.imshow("imageCanvas", dst);
+  cv.imshow("histogramCanvas", dst);
   srcMat.delete();
   dst.delete();
   srcVec.delete();
