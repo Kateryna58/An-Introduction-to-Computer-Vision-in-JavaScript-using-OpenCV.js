@@ -20,3 +20,11 @@
       body.loading .modal {
         display: block;
       }
+
+      #imageSrc{
+        width:400px;
+        height:300px;
+      }
+      input{
+        display:block;
+      }
