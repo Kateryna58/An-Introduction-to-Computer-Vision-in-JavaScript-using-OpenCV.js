@@ -11,7 +11,14 @@ inputElement.onchange = function () {
   imgElement.src = URL.createObjectURL(event.target.files[0]);
 };
 let images = new Array();
-images = ["imageSrc", "histogramOriginCanvas","equalizationImage","equalizationCanvas"];
+images = [
+  "grayOrImCanvas",
+  "histogramGrayOrImCanvas",
+  "equalizationImage",
+  "equalizationCanvas",
+  "NormImage",
+  "NormImageCanvas"
+];
 
 imgElement.onload = function () {
   let src = cv.imread("imageSrc");
@@ -22,8 +29,29 @@ imgElement.onload = function () {
   src.delete();
   dst.delete();
 
+  /*----------grayscale image original------------------------*/
+  let image = cv.imread(imgElement);
+  cv.cvtColor(image, image, cv.COLOR_RGBA2GRAY, 0);
+  cv.imshow("grayOrImCanvas", image);
+  image.delete();
+  /*-----------------normalization-----------------------*/
+  
+  
+  
+
+  let src2 = cv.imread(imgElement);
+  let dst2 = new cv.Mat();
+  let noArray = new cv.Mat();
+  cv.cvtColor(src2, src2, cv.COLOR_RGBA2GRAY, 0);
+
+
+  cv.normalize(src2, dst2, 0, 255, cv.NORM_MINMAX, -1, noArray);
+  cv.imshow("NormImage", dst2);
+  src2.delete();
+  dst2.delete();
+  noArray.delete();
   /*------------------------------------------creating histograms---------------------------------------------------------*/
-  for (let i = 0; i <images.length; i++) {
+  for (let i = 0; i < images.length; i++) {
     let srcMat = cv.imread(images[i]);
     cv.cvtColor(srcMat, srcMat, cv.COLOR_RGBA2GRAY, 0);
     let srcVec = new cv.MatVector();
@@ -48,7 +76,7 @@ imgElement.onload = function () {
       let point2 = new cv.Point((i + 1) * scale - 1, srcMat.rows - binVal);
       cv.rectangle(dst2, point1, point2, color, cv.FILLED);
     }
-    cv.imshow(images[i+1], dst2);
+    cv.imshow(images[i + 1], dst2);
     srcMat.delete();
     dst2.delete();
     srcVec.delete();

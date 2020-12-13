@@ -8,9 +8,13 @@
     <div class="modal"></div>
     <input type="file" id="fileInput" name="file" />
     <img id="imageSrc" alt="No Image" />
-    <canvas id="histogramOriginCanvas"></canvas><br>
+    <!-- <canvas id="histogramOriginCanvas">--></canvas><br>
+    <canvas id="grayOrImCanvas"></canvas>
+    <canvas id="histogramGrayOrImCanvas"></canvas><br>
     <canvas id="equalizationImage"></canvas>
-    <canvas id="equalizationCanvas"></canvas>
+    <canvas id="equalizationCanvas"></canvas><br>
+    <canvas id="NormImage"></canvas>
+    <canvas id="NormImageCanvas"></canvas>
     <script src="app.js" type="text/javascript"></script>
     <script async src="opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
   </body>
