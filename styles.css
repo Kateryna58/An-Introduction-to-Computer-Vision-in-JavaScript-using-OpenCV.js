@@ -1,4 +1,8 @@
      /* display loading gif and hide webpage */
+     div{
+      display: inline-block;
+      text-align:center;
+     }
      .modal {
         display: none;
         position: fixed;

@@ -2,20 +2,46 @@
 <html>
   <head>
     <title>lab 7</title>
-    <link href="styles.css" rel="stylesheet" type="text/css">
+    <link href="styles.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div class="modal"></div>
     <input type="file" id="fileInput" name="file" />
-    <img id="imageSrc" alt="No Image" />
-    <!-- <canvas id="histogramOriginCanvas">--></canvas><br>
-    <canvas id="grayOrImCanvas"></canvas>
-    <canvas id="histogramGrayOrImCanvas"></canvas><br>
-    <canvas id="equalizationImage"></canvas>
-    <canvas id="equalizationCanvas"></canvas><br>
-    <canvas id="NormImage"></canvas>
-    <canvas id="NormImageCanvas"></canvas>
+    <div>
+      <img id="imageSrc" alt="No Image" />
+      <canvas id="histogramOriginCanvas"></canvas>
+      <h4>Original image</h4>
+    </div>
+    <br />
+    <div>
+      <canvas id="r"></canvas>
+      <canvas id="g"></canvas>
+      <canvas id="b"></canvas>
+      <h4>RGB SPLIT</h4>
+    </div>
+    <div>
+      <canvas id="merge_rgb"></canvas>
+      <h4>RGB MERGE</h4>
+    </div>
+    <br />
+    <div>
+      <canvas id="grayOrImCanvas"></canvas>
+      <canvas id="histogramGrayOrImCanvas"></canvas>
+      <h4>Grayscale image</h4>
+    </div>
+    <br />
+    <div>
+      <canvas id="equalizationImage"></canvas>
+      <canvas id="equalizationCanvas"></canvas><br />
+      <h4>Equalization</h4>
+    </div>
+    <br />
+    <div>
+      <canvas id="NormImage"></canvas>
+      <canvas id="NormImageCanvas"></canvas>
+      <h4 >Normalization</h4>
+    </div>
     <script src="app.js" type="text/javascript"></script>
-    <script async src="opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+    <script async src="opencv.js"  onload="onOpenCvReady();" type="text/javascript"></script>
   </body>
 </html>

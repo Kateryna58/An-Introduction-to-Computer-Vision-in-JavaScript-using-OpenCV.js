@@ -17,7 +17,7 @@ images = [
   "equalizationImage",
   "equalizationCanvas",
   "NormImage",
-  "NormImageCanvas"
+  "NormImageCanvas",
 ];
 
 imgElement.onload = function () {
@@ -28,22 +28,44 @@ imgElement.onload = function () {
   cv.imshow("equalizationImage", dst);
   src.delete();
   dst.delete();
+  /*-------------------rgb-----------------------------------*/
+  let img = document.getElementById("imageSrc");
+  let src_RGB = cv.imread(img);
+  let R = new cv.Mat();
+  let G = new cv.Mat();
+  let B = new cv.Mat();
 
+  // extract channels
+  let rgbaPlanes = new cv.MatVector();
+  // split the Mat
+  cv.split(src_RGB, rgbaPlanes);
+  // get RED channel
+  R = rgbaPlanes.get(0);
+  G = rgbaPlanes.get(1);
+  B = rgbaPlanes.get(2);
+  cv.imshow("r", R);
+  cv.imshow("g", G);
+  cv.imshow("b", B);
+  /*------------merge-----------*/
+  cv.merge(rgbaPlanes, src_RGB);
+  cv.imshow("merge_rgb", src_RGB);
+  
+  R.delete();
+  G.delete();
+  B.delete();
+
+  src_RGB.delete();
+  rgbaPlanes.delete();
   /*----------grayscale image original------------------------*/
   let image = cv.imread(imgElement);
   cv.cvtColor(image, image, cv.COLOR_RGBA2GRAY, 0);
   cv.imshow("grayOrImCanvas", image);
   image.delete();
   /*-----------------normalization-----------------------*/
-  
-  
-  
-
   let src2 = cv.imread(imgElement);
   let dst2 = new cv.Mat();
   let noArray = new cv.Mat();
   cv.cvtColor(src2, src2, cv.COLOR_RGBA2GRAY, 0);
-
 
   cv.normalize(src2, dst2, 0, 255, cv.NORM_MINMAX, -1, noArray);
   cv.imshow("NormImage", dst2);
