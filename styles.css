@@ -20,3 +20,13 @@
       body.loading .modal {
         display: block;
       }
+      img{
+        width:400px;
+        height:300px;
+        border:1px solid grey;
+      }
+      canvas{
+        border:1px solid grey;
+        width:400px;
+        height:300px;
+      }

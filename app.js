@@ -12,50 +12,34 @@ inputElement.onchange = function () {
 };
 
 imgElement.onload = function () {
-  let image = cv.imread(imgElement);
-  cv.imshow("imageCanvas", image);
-  image.delete();
+  
+  let src = cv.imread(imgElement);
+  let dst = new cv.Mat();
+  let dsize = new cv.Size(src.rows, src.cols);
+  // (data32F[0], data32F[1]) is the first point
+  // (data32F[2], data32F[3]) is the sescond point
+  // (data32F[4], data32F[5]) is the third point
+  // (data32F[6], data32F[7]) is the fourth point
+  let srcTri = cv.matFromArray(4, 1, cv.CV_32FC2, [56, 65, 368, 52, 28, 387, 389, 390]);
+  let dstTri = cv.matFromArray(4, 1, cv.CV_32FC2, [100,100, 200, 0, 100, 600, 500, 500]);
+  let M = cv.getPerspectiveTransform(srcTri, dstTri);
+  // You can try more different parameters
+  cv.warpPerspective(src, dst, M, dsize, cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar());
+  cv.imshow('Perspective', dst);
+  src.delete(); dst.delete(); M.delete(); srcTri.delete(); dstTri.delete();
 };
-//---------------step 3-------------------------
 
-document.getElementById("circlesButton").onclick = function () {
+
+document.getElementById("Perspective").onclick = function () {
   this.disabled = true;
   document.body.classList.add("loading");
 
-  let srcMat = cv.imread("imageCanvas");
-  let displayMat = srcMat.clone();
-  let circlesMat = new cv.Mat();
+  
+  
 
-  cv.cvtColor(srcMat, srcMat, cv.COLOR_RGBA2GRAY);
 
-  cv.HoughCircles(
-    srcMat,
-    circlesMat,
-    cv.HOUGH_GRADIENT,
-    1,
-    45,
-    75,
-    40,
-    0,
-    0
-  );
 
-  for (let i = 0; i < circlesMat.cols; ++i) {
-    let x = circlesMat.data32F[i * 3];
-    let y = circlesMat.data32F[i * 3 + 1];
-    let radius = circlesMat.data32F[i * 3 + 2];
-    let center = new cv.Point(x, y);
-
-    // draw circles
-    cv.circle(displayMat, center, radius, [0, 0, 0, 255], 3);
-  }
-
-  cv.imshow("imageCanvas", displayMat);
-
-  srcMat.delete();
-  displayMat.delete();
-  circlesMat.delete();
-
+  
   this.disabled = false;
   document.body.classList.remove("loading");
 };
