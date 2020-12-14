@@ -12,50 +12,30 @@ inputElement.onchange = function () {
 };
 
 imgElement.onload = function () {
-  let image = cv.imread(imgElement);
-  cv.imshow("imageCanvas", image);
-  image.delete();
-};
-//---------------step 3-------------------------
-
-document.getElementById("circlesButton").onclick = function () {
-  this.disabled = true;
-  document.body.classList.add("loading");
-
-  let srcMat = cv.imread("imageCanvas");
-  let displayMat = srcMat.clone();
-  let circlesMat = new cv.Mat();
-
-  cv.cvtColor(srcMat, srcMat, cv.COLOR_RGBA2GRAY);
-
-  cv.HoughCircles(
-    srcMat,
-    circlesMat,
-    cv.HOUGH_GRADIENT,
-    1,
-    45,
-    75,
-    40,
-    0,
-    0
-  );
-
-  for (let i = 0; i < circlesMat.cols; ++i) {
-    let x = circlesMat.data32F[i * 3];
-    let y = circlesMat.data32F[i * 3 + 1];
-    let radius = circlesMat.data32F[i * 3 + 2];
-    let center = new cv.Point(x, y);
-
-    // draw circles
-    cv.circle(displayMat, center, radius, [0, 0, 0, 255], 3);
-  }
-
-  cv.imshow("imageCanvas", displayMat);
-
-  srcMat.delete();
-  displayMat.delete();
-  circlesMat.delete();
-
-  this.disabled = false;
-  document.body.classList.remove("loading");
+  /*------------------------Canny----------------------------*/
+  let src = cv.imread(imgElement);
+  let dst = new cv.Mat();
+  cv.cvtColor(src, src, cv.COLOR_RGB2GRAY, 0);
+  // You can try more different parameters
+  cv.Canny(src, dst, 50, 100, 3, false);
+  cv.imshow("imageCanvas", dst);
+  src.delete();
+  dst.delete();
+    /*------------------------findContours----------------------------*/
+    let src2 = cv.imread(imgElement);
+    let dst2 = cv.Mat.zeros(src2.cols, src2.rows, cv.CV_8UC3);
+    cv.cvtColor(src2, src2, cv.COLOR_RGBA2GRAY, 0);
+    cv.threshold(src2, src2, 120, 200, cv.THRESH_BINARY);
+    let contours = new cv.MatVector();
+    let hierarchy = new cv.Mat();
+    // You can try more different parameters
+    cv.findContours(src2, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
+    // draw contours with random Scalar
+    for (let i = 0; i < contours.size(); ++i) {
+        let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255),
+                                  Math.round(Math.random() * 255));
+        cv.drawContours(dst2, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
+    }
+    cv.imshow('findContours', dst2);
+    src2.delete(); dst2.delete(); contours.delete(); hierarchy.delete();
 };

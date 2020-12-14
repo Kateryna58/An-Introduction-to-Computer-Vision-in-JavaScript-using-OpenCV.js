@@ -20,3 +20,7 @@
       body.loading .modal {
         display: block;
       }
+      img,canvas{
+        max-width:500px;
+        height:auto;
+      }
